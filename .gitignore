@@ -1,0 +1,8 @@
+# OSX Ignore from https://github.com/github/gitignore/
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+/.project
+/.settings
+/RFID_Checkin_Project_mods.zip

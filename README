@@ -1,0 +1,59 @@
+This project is an RFID based check-in system. Users can swipe their RFID card to leave a digital footprint of
+their profile information at a particular location. The system requires an infrastructure of RFID cards (one RFID
+card per user), and a set of RFID readers (so-called "Check-in points"). While it is open and fairly flexible for
+deployment in any location, the system has been designed for the use in public libraries and community centres.
+The aim is to augment the physical infrastructure of a place with social information about the people who traverse that place towards
+ice-breaking conversations and making links between people. This idea basis on an understanding of the library
+as a social hub for knowledge and information.
+
+A first instance of the Check-in sytem is being piloted at "The Edge" (http://edgeqld.org.au), a Digital Culture Centre and
+initiative of the State Library of Queensland.
+
+The project consists of 6 components:
+
+- Database
+All users' profile information and RFID numbers are stored in a MySQL database. The database also keeps track of user checkins, i.e. timestamps and locations
+when each user checks in.
+
+- User Profile Web Interface
+Users can enter and update their profile information through a dedicated web interface. The backend is developed in
+PHP, using the CodeIgniter framework.
+
+- RFID cards
+Each user of the system is provided with an 125kHz RFID card. During the registration process, the ID-number of the
+RFID card is entered into the database and referenced with the user's profile information. Everytime the user swipes
+his RFID card at an RFID Checkin Point, the user is marked as present at the respective Checkin Point in the database.
+
+- Visualisations
+This folder contains different visualisations of the checkin data. The goal is to develop aesthetically pleasing visualisations
+that provide information about the social space of the location where the system is installed. These can e.g. contain
+interests, backgrounds, projects and status messages of the people who are currently checked in. Rather than just using
+textual information we are looking for ways to develop ambient displays, i.e. displays that provide information in the
+periphery of people's attention, e.g. by producing subtle changes in the environment. These can be projections, public displays,
+networked lights. We started developing initial visualisation concepts in Processing, but any programming / InfoViz platform can be used.
+The data can be obtained trough the API in JSON format.
+
+- RFID Checkin Points:
+A Checkin Point is a physical component that consists of an RFID reader and a microcontroller with network access
+to process the RFID user card values and submit a checkin in the user database. For this project we use the SNARC
+(http://www.hsbne.org/projects/SNARC) controller with an onboard ATMEGA328 and Ethernet chip, but the source code is fully compatible
+with an Arduino and Etherneshield. Each checkin point has an ID and marks its location in the database accordingly.
+
+- API
+A restful API provides access to real-time Checkin data in JSON format. The API can be used by graphic designers and 
+visual artists to develop real-time information visualisations of the checkin data.
+
+
+
+
+NOTES:
+1) Applying the checkin-system project to another country / timezone
+
+The DATETIME timestamps in the MySQL table 'checkin' are stored in UTC +10 (Brisbane local time) format.
+In case this project is to be applied to a different location with a particular local time, following adjustments need to be made:
+
+- checkin_submit_manual.php => change $dateTime variable accordingly
+- timezone.php => change $timezone = variable accordingly. this is necessary because some MySQL VIEWs, e.g. the 'view_checkins' VIEW has a MySQL function that compares the checkin time with the local NOW() time of the MySQL server.
+
+With the changes mentioned above, the checkin system can be run from any PHP/MySQL server, independent from its location (i.e. timezone). UNIX_timestamps are not appropriate
+for this project as it envisions to make use of MySQL DATESTAMP functions in the future.
